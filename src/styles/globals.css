@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .sun-and-moon {
+    @apply inline-block relative h-5;
+  }
+  .sun-and-moon__label {
+    @apply inline-block relative w-10 h-5 border border-zinc-500 bg-zinc-800 rounded-full cursor-pointer;
+    transition: all 0.4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  }
+  .sun-and-moon__indicator {
+    @apply block absolute top-1/2 left-1/2 w-[13px] h-[13px] -translate-y-1/2 -translate-x-[16px] bg-slate-500 rounded-full;
+    box-shadow: 10px 0px 0 0 rgba(0, 0, 0, 0.2) inset;
+    transition: all 0.4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  }
+  .sun-and-moon__indicator::before,
+  .sun-and-moon__indicator::after {
+    @apply absolute content-[""] block bg-white rounded-full;
+    transition: all 0.4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  }
+  .sun-and-moon__indicator::before {
+    @apply top-[7px] left-[7px] w-1 h-1 opacity-20;
+  }
+  .sun-and-moon__indicator::after {
+    @apply top-0.5 left-0.5 w-[7px] h-[7px] opacity-40;
+  }
+  .sun-and-moon__decoration {
+    @apply absolute top-[70%] left-1/2 w-px h-px bg-white rounded-full;
+    animation: twinkle 0.8s infinite -0.6s;
+  }
+  .sun-and-moon__decoration::before,
+  .sun-and-moon__decoration::after {
+    @apply block absolute content-[""] w-px h-px bg-white rounded-full;
+  }
+  .sun-and-moon__decoration::before {
+    @apply -top-2 left-[7px] opacity-100;
+    animation: twinkle 0.6s infinite;
+  }
+  .sun-and-moon__decoration::after {
+    @apply -top-[3px] left-[13px];
+    animation: twinkle 0.6s infinite -0.2s;
+  }
+  .sun-and-moon__input {
+    @apply invisible absolute;
+  }
+  .sun-and-moon__input:checked + .sun-and-moon__label {
+    @apply bg-blue-300 border-sky-600;
+  }
+  .sun-and-moon__input:checked + .sun-and-moon__label .sun-and-moon__indicator {
+    @apply shadow-none bg-amber-300 translate-x-[3px];
+  }
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__indicator::before,
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__indicator::after {
+    @apply hidden;
+  }
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__decoration {
+    @apply top-[65%] translate-x-0 translate-y-1/2 w-[7px] h-[7px] rounded-bl-none rounded-br-none;
+    animation: cloud 8s linear infinite;
+  }
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__decoration::before,
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__decoration::after {
+    @apply top-auto bottom-0 animate-none rounded-tl-full rounded-tr-full;
+  }
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__decoration::before {
+    @apply -left-0.5 rounded-bl-full rounded-br-none w-[3px] h-[3px];
+  }
+  .sun-and-moon__input:checked
+    + .sun-and-moon__label
+    .sun-and-moon__decoration::after {
+    @apply left-1.5 rounded-bl-none rounded-br-full w-1 h-1;
+  }
+  @keyframes twinkle {
+    50% {
+      @apply opacity-20;
+    }
+  }
+  @keyframes cloud {
+    0% {
+      transform: translate(10%, -50%);
+    }
+    50% {
+      transform: translate(-40%, -50%);
+    }
+    100% {
+      transform: translate(10%, -50%);
+    }
+  }
+} /*# sourceMappingURL=globals.css.map */
