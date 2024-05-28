@@ -33,7 +33,7 @@ export default function ThemeLayout({ children }: PropsWithChildren) {
                   ? "font-medium underline"
                   : "hover:text-cyan-500";
               return (
-                <Link key={`Link-${i}`} href={link.href} className={className}>
+                <Link key={`Link-${i}`} href={link.href} className={`${className} dark:text-white`}>
                   {link.label}
                 </Link>
               );
