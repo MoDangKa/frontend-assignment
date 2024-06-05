@@ -3,7 +3,6 @@ import CropBasket from "@/components/CropBasket";
 import CustomButton from "@/components/common/buttons/CustomButton";
 import { mockCrops } from "@/lib/mock";
 import { Crop } from "@/type";
-import { nanoid } from "nanoid";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type BasketData = {
@@ -11,8 +10,9 @@ type BasketData = {
   vegetable: Crop[];
 };
 
-export default function V1Page() {
+export default function V2Page() {
   const [crops, setCrops] = useState<Crop[]>([]);
+
   const cropsRef = useRef<Crop[]>([]);
   const basketRef = useRef<Crop[]>([]);
   const timersRef = useRef<{ [key: string]: NodeJS.Timeout }>({});
@@ -35,10 +35,10 @@ export default function V1Page() {
         }
         return acc;
       },
-      { fruit: [], vegetable: [] },
+      { fruit: [], vegetable: [] }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [crops]);
+  }, [basketRef.current]);
 
   const handleChooseCrop = (selectedCrop: Crop) => {
     if (!crops.some((crop) => crop.name === selectedCrop.name)) {
@@ -46,41 +46,36 @@ export default function V1Page() {
       return;
     }
 
-    const id = nanoid();
-    const xCrop: Crop = { ...selectedCrop, id };
+    // Move the selected crop to the basket
+    basketRef.current = [...basketRef.current, selectedCrop];
+    setCrops((prev) => {
+      cropsRef.current = prev.filter((crop) => crop.name !== selectedCrop.name);
+      return cropsRef.current;
+    });
 
-    basketRef.current = [...basketRef.current, xCrop];
-
-    cropsRef.current = crops.filter((crop) => crop.name !== selectedCrop.name);
-    setCrops(cropsRef.current);
-
-    timersRef.current[id] = setTimeout(() => {
-      const findXCrop = basketRef.current.find((b) => b.id === id);
-
-      if (findXCrop) {
-        const currentBasket = basketRef.current.filter((b) => b.id !== id);
-        basketRef.current = currentBasket;
-        const currentCrops = [...cropsRef.current, selectedCrop];
-        cropsRef.current = currentCrops;
-        setCrops(currentCrops);
+    // Set a timer to move crop back to the main list after 5 seconds
+    timersRef.current[selectedCrop.name] = setTimeout(() => {
+      basketRef.current = basketRef.current.filter(
+        (b) => b.name !== selectedCrop.name
+      );
+      if (!cropsRef.current.some((crop) => crop.name === selectedCrop.name)) {
+        setCrops((prev) => {
+          cropsRef.current = [...prev, selectedCrop];
+          return cropsRef.current;
+        });
       }
-
-      delete timersRef.current[id];
+      delete timersRef.current[selectedCrop.name];
     }, 5000);
   };
 
   const handleChooseCropInBasket = (selectedCrop: Crop) => {
-    const currentBasket = basketRef.current.filter(
-      (b) => b.name !== selectedCrop.name,
+    basketRef.current = basketRef.current.filter(
+      (b) => b.name !== selectedCrop.name
     );
-    basketRef.current = currentBasket;
-
-    const findInCrops = crops.find((c) => c.name === selectedCrop.name);
-    if (!findInCrops) {
-      const currentCrops = [...crops, { ...selectedCrop, id: "" }];
-      cropsRef.current = currentCrops;
-      setCrops(currentCrops);
-    }
+    setCrops((prev) => {
+      cropsRef.current = [...prev, selectedCrop];
+      return cropsRef.current;
+    });
   };
 
   return (

@@ -1,9 +1,4 @@
-export interface Crop {
-  type: CropType;
-  name: string;
-}
-
-export type CropType = "Fruit" | "Vegetable";
+import { Crop } from "@/type";
 
 const mockCrops: Crop[] = [
   {

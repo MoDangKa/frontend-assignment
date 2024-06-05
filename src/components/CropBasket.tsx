@@ -1,4 +1,4 @@
-import { type Crop, type CropType } from "@/lib/mock";
+import { Crop, CropType } from "@/type";
 import CustomButton from "./common/buttons/CustomButton";
 
 type Props = {
