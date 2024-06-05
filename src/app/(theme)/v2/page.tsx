@@ -49,15 +49,14 @@ const reducer = (state: State, action: Action): State => {
       };
     case "REMOVE_FROM_BASKET_BY_TIME":
       const xCrop = action.payload;
-      const findXCrop = state.basket.find((b) => b.id === xCrop.id);
-      if (findXCrop) {
+      const findXCrop = state.basket.findIndex((b) => b.id === xCrop.id);
+      if (findXCrop > -1) {
         const basket = state.basket.filter(
           (crop) => crop.id !== action.payload.id,
         );
-        const findCrop = state.crops.find((b) => b.name === xCrop.name);
-        const crops = !!findCrop
-          ? state.crops
-          : [...state.crops, { ...xCrop, id: "" }];
+        const findCrop = state.crops.findIndex((b) => b.name === xCrop.name);
+        const crops =
+          findCrop > -1 ? state.crops : [...state.crops, { ...xCrop, id: "" }];
         return { ...state, crops, basket };
       }
       return state;
